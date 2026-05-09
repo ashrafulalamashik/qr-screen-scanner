@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Screen Scanner</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 240px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #22d3a5 0%, #0891b2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo svg { width: 18px; height: 18px; }
+
+    .header-text h1 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #f1f5f9;
+      letter-spacing: -0.01em;
+    }
+
+    .header-text p {
+      font-size: 10.5px;
+      color: #64748b;
+      margin-top: 1px;
+    }
+
+    .body {
+      padding: 16px 18px 18px;
+    }
+
+    .description {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .steps {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 11.5px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .step-num {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(34, 211, 165, 0.12);
+      color: #22d3a5;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .scan-btn {
+      width: 100%;
+      padding: 10px;
+      background: #22d3a5;
+      color: #0f1117;
+      border: none;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: -0.01em;
+      transition: background 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .scan-btn:hover { background: #1ab894; }
+    .scan-btn:active { transform: scale(0.98); }
+    .scan-btn:disabled { background: #1e2a27; color: #4a7a6d; cursor: not-allowed; }
+
+    .scan-btn svg { width: 15px; height: 15px; }
+
+    #status-msg {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #f87171;
+      text-align: center;
+      min-height: 14px;
+    }
+
+    #status-msg.success { color: #22d3a5; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">
+      <!-- QR icon -->
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="1.8"/>
+        <rect x="14" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="1.8"/>
+        <rect x="3" y="14" width="7" height="7" rx="1" stroke="white" stroke-width="1.8"/>
+        <rect x="5" y="5" width="3" height="3" fill="white"/>
+        <rect x="16" y="5" width="3" height="3" fill="white"/>
+        <rect x="5" y="16" width="3" height="3" fill="white"/>
+        <path d="M14 14h2v2h-2zM18 14h3v2h-3zM14 18h2v3h-2zM18 18h1v1h-1zM20 20h1v1h-1z" fill="white"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>QR Screen Scanner</h1>
+      <p>Scan QR codes on your screen</p>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="steps">
+      <div class="step"><span class="step-num">1</span><span>Click "Scan QR Code" below</span></div>
+      <div class="step"><span class="step-num">2</span><span>Your screen will dim slightly</span></div>
+      <div class="step"><span class="step-num">3</span><span>Drag to select the QR code area</span></div>
+      <div class="step"><span class="step-num">4</span><span>Result appears instantly on screen</span></div>
+    </div>
+
+    <button class="scan-btn" id="scanBtn">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M3 9V5a2 2 0 0 1 2-2h4M3 15v4a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <rect x="7" y="7" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      Scan QR Code
+    </button>
+
+    <div id="status-msg"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
